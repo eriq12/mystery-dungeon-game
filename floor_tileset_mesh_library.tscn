@@ -1,0 +1,155 @@
+[gd_scene load_steps=15 format=3 uid="uid://cexjj5fefgacx"]
+
+[ext_resource type="ArrayMesh" uid="uid://t0vf1qj3ugct" path="res://addons/kaykit_dungeon_remastered/Assets/obj/floor_dirt_small_A.obj" id="1_dvgex"]
+[ext_resource type="ArrayMesh" uid="uid://dyvamk5kt2fjx" path="res://addons/kaykit_dungeon_remastered/Assets/obj/floor_dirt_small_B.obj" id="2_83vcm"]
+[ext_resource type="ArrayMesh" uid="uid://bfi3u2527amec" path="res://addons/kaykit_dungeon_remastered/Assets/obj/floor_dirt_small_C.obj" id="3_cb422"]
+[ext_resource type="ArrayMesh" uid="uid://bhp1s8ulg71sp" path="res://addons/kaykit_dungeon_remastered/Assets/obj/floor_dirt_small_D.obj" id="4_xyk4s"]
+[ext_resource type="ArrayMesh" uid="uid://duwg47g6og8u3" path="res://addons/kaykit_dungeon_remastered/Assets/obj/floor_dirt_small_weeds.obj" id="5_mstni"]
+[ext_resource type="ArrayMesh" uid="uid://c1xgiydlsgxg1" path="res://addons/kaykit_dungeon_remastered/Assets/obj/floor_tile_small.obj" id="6_3nahh"]
+[ext_resource type="ArrayMesh" uid="uid://cbli62to758qp" path="res://addons/kaykit_dungeon_remastered/Assets/obj/floor_tile_small_broken_A.obj" id="7_ylahv"]
+[ext_resource type="ArrayMesh" uid="uid://mmgrceotpd23" path="res://addons/kaykit_dungeon_remastered/Assets/obj/floor_tile_small_broken_B.obj" id="8_rlek8"]
+[ext_resource type="ArrayMesh" uid="uid://cqcdlu5nbxgoe" path="res://addons/kaykit_dungeon_remastered/Assets/obj/floor_tile_small_decorated.obj" id="9_46vh3"]
+[ext_resource type="ArrayMesh" uid="uid://b17dliu7fgpna" path="res://addons/kaykit_dungeon_remastered/Assets/obj/floor_tile_small_weeds_A.obj" id="10_fgdmd"]
+[ext_resource type="ArrayMesh" uid="uid://c5y637xtjoqkh" path="res://addons/kaykit_dungeon_remastered/Assets/obj/floor_tile_small_weeds_B.obj" id="11_i4sxg"]
+[ext_resource type="ArrayMesh" uid="uid://c2osc0v2y5jdw" path="res://addons/kaykit_dungeon_remastered/Assets/obj/floor_wood_small.obj" id="12_1gkga"]
+[ext_resource type="ArrayMesh" uid="uid://ck7u4m1sqtflt" path="res://addons/kaykit_dungeon_remastered/Assets/obj/floor_wood_small_dark.obj" id="13_yiqny"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4souq"]
+size = Vector3(2.0006, 0.120659, 2.00085)
+
+[node name="Node3D" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00113058, -0.0105624, 0.000796318)
+
+[node name="FloorDirtSmallA" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+mesh = ExtResource("1_dvgex")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="FloorDirtSmallA"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FloorDirtSmallA/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000419617, -0.0401706, 0)
+shape = SubResource("BoxShape3D_4souq")
+
+[node name="FloorDirtSmallB" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.1, 0)
+mesh = ExtResource("2_83vcm")
+skeleton = NodePath("../FloorDirtSmallA")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="FloorDirtSmallB"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FloorDirtSmallB/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000419617, -0.0401706, 0)
+shape = SubResource("BoxShape3D_4souq")
+
+[node name="FloorDirtSmallC" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 3)
+mesh = ExtResource("3_cb422")
+skeleton = NodePath("../FloorDirtSmallA")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="FloorDirtSmallC"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FloorDirtSmallC/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000419617, -0.0401706, 0)
+shape = SubResource("BoxShape3D_4souq")
+
+[node name="FloorDirtSmallD" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.1, 3)
+mesh = ExtResource("4_xyk4s")
+skeleton = NodePath("../FloorDirtSmallA")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="FloorDirtSmallD"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FloorDirtSmallD/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000419617, -0.0401706, 0)
+shape = SubResource("BoxShape3D_4souq")
+
+[node name="FloorDirtSmallWeeds" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.1, 3)
+mesh = ExtResource("5_mstni")
+skeleton = NodePath("../FloorDirtSmallA")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="FloorDirtSmallWeeds"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FloorDirtSmallWeeds/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000419617, -0.0401706, 0)
+shape = SubResource("BoxShape3D_4souq")
+
+[node name="FloorTileSmall" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.1, 0)
+mesh = ExtResource("6_3nahh")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="FloorTileSmall"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FloorTileSmall/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000419617, -0.0401706, 0)
+shape = SubResource("BoxShape3D_4souq")
+
+[node name="FloorTileSmallBrokenA" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.1, 3)
+mesh = ExtResource("7_ylahv")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="FloorTileSmallBrokenA"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FloorTileSmallBrokenA/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000419617, -0.0401706, 0)
+shape = SubResource("BoxShape3D_4souq")
+
+[node name="FloorTileSmallBrokenB" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.1, 3)
+mesh = ExtResource("8_rlek8")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="FloorTileSmallBrokenB"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FloorTileSmallBrokenB/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000419617, -0.0401706, 0)
+shape = SubResource("BoxShape3D_4souq")
+
+[node name="FloorTileSmallDecorated" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.1, 0)
+mesh = ExtResource("9_46vh3")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="FloorTileSmallDecorated"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FloorTileSmallDecorated/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000419617, -0.0401706, 0)
+shape = SubResource("BoxShape3D_4souq")
+
+[node name="FloorTileSmallWeedsA" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.1, -3)
+mesh = ExtResource("10_fgdmd")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="FloorTileSmallWeedsA"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FloorTileSmallWeedsA/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000419617, -0.0401706, 0)
+shape = SubResource("BoxShape3D_4souq")
+
+[node name="FloorTileSmallWeedsB" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.1, -3)
+mesh = ExtResource("11_i4sxg")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="FloorTileSmallWeedsB"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FloorTileSmallWeedsB/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000419617, -0.0401706, 0)
+shape = SubResource("BoxShape3D_4souq")
+
+[node name="FloorWoodSmall" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0.1, 3)
+mesh = ExtResource("12_1gkga")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="FloorWoodSmall"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FloorWoodSmall/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000419617, -0.0401706, 0)
+shape = SubResource("BoxShape3D_4souq")
+
+[node name="FloorWoodSmallDark" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0.1, 0)
+mesh = ExtResource("13_yiqny")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="FloorWoodSmallDark"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FloorWoodSmallDark/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000419617, -0.0401706, 0)
+shape = SubResource("BoxShape3D_4souq")

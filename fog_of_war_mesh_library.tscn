@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://c7v78e03npumv"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ymrob"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2aumv"]
+vertex_color_use_as_albedo = true
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="PlaceholderTexture3D" id="PlaceholderTexture3D_nvigt"]
+
+[sub_resource type="FogMaterial" id="FogMaterial_emfk1"]
+density = 0.15
+edge_fade = 0.0189465
+density_texture = SubResource("PlaceholderTexture3D_nvigt")
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_skk4n"]
+next_pass = SubResource("FogMaterial_emfk1")
+transparency = 3
+alpha_hash_scale = 0.01
+alpha_antialiasing_mode = 2
+alpha_antialiasing_edge = 0.17
+cull_mode = 1
+albedo_color = Color(1, 1, 1, 0.196078)
+emission_energy_multiplier = 7.05
+
+[node name="Node3D" type="Node3D"]
+
+[node name="DarkFogOfWar" type="MeshInstance3D" parent="."]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 2, 0)
+mesh = SubResource("BoxMesh_ymrob")
+surface_material_override/0 = SubResource("StandardMaterial3D_2aumv")
+
+[node name="DimFogOfWar" type="MeshInstance3D" parent="."]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 5, 2, 0)
+mesh = SubResource("BoxMesh_ymrob")
+surface_material_override/0 = SubResource("ORMMaterial3D_skk4n")
+
+[node name="DimFogOfWar2" type="MeshInstance3D" parent="."]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 5, 2, -4.01542)
+mesh = SubResource("BoxMesh_ymrob")
+surface_material_override/0 = SubResource("ORMMaterial3D_skk4n")

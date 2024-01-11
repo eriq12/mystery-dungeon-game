@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Move_Effect_Movement" load_steps=2 format=3 uid="uid://sq1pqp11ncv2"]
+
+[ext_resource type="Script" path="res://character/action/move/effect_variants/move_effect_movement.gd" id="1_tfbkr"]
+
+[resource]
+script = ExtResource("1_tfbkr")
+movement_targeting = 0
+tiles_moved = 0
+pierce_occupied = false
+targeting = 0
+type_effect = 0
