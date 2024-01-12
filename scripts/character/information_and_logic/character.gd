@@ -18,10 +18,6 @@ var orientation : TileMapLevel.Direction : get = _get_orientation, set = _set_or
 
 var has_queued_move : bool : get = _has_queued_move
 
-const walk_preset : CharacterMove = preload("res://resources/moves/preset_moves/movement/walk_direction_move.tres")
-
-const face_preset : CharacterMove = preload("res://resources/moves/preset_moves/movement/face_direction_move.tres")
-
 var brain : CharacterBrain : get = get_brain
 
 var _brain_cache : CharacterBrain
