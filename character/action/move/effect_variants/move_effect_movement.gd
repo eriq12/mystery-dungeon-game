@@ -1,4 +1,4 @@
-extends Move_Effect
+extends MoveEffect
 
 class_name Move_Effect_Movement
 

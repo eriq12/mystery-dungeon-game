@@ -1,6 +1,6 @@
 extends Resource
 
-class_name Move_Effect
+class_name MoveEffect
 
 enum Targeting_Type {NONE=-1, SELF, AREA_OF_EFFECT, RANGED}
 
