@@ -16,15 +16,13 @@ var character_render : Node3D
 
 var orientation : TileMapLevel.Direction
 
-var queued_orientation : TileMapLevel.Direction = TileMapLevel.Direction.NONE
-
-var _queued_move : Character_Move = null
-
 var has_queued_move : bool : get = _has_queued_move
 
-var walk_preset : Character_Move = load("res://moves/preset_moves/movement/walk_direction_move.tres")
+const walk_preset : CharacterMove = preload("res://moves/preset_moves/movement/walk_direction_move.tres")
 
-var face_preset : Character_Move = load("res://moves/preset_moves/movement/face_direction_move.tres")
+const face_preset : CharacterMove = preload("res://moves/preset_moves/movement/face_direction_move.tres")
+
+var brain : CharacterBrain : get = get_brain
 
 #endregion
 
@@ -49,6 +47,9 @@ var view_range : int = 5
 
 #endregion
 
+func _ready() -> void:
+	character_render = get_child(0)
+
 func set_grid_location(new_location : Vector3i) -> void:
 	location = new_location
 	on_location_change.emit(new_location, view_range)
@@ -63,23 +64,21 @@ func set_view_distance(new_distance : int) -> void:
 
 #region move queue handling
 
-func dequeue_move() -> Character_Move:
-	var return_move : Character_Move = _queued_move
-	_queued_move = null
-	return return_move
+func get_brain() -> CharacterBrain:
+	if brain != null:
+		return brain
+	for node in get_children():
+		if node.is_class("CharacterBrain"):
+			brain = node
+	return brain
+
+func dequeue_move() -> CharacterMove:
+	return brain.dequeue_move() if brain else null
 
 func _has_queued_move() -> bool:
-	return not _queued_move == null
-
-func set_queued_move(new_move : Character_Move) -> void:
-	_queued_move = new_move
+	return brain and brain.has_queued_move
 
 func dequeue_direction() -> TileMapLevel.Direction:
-	var return_direction : TileMapLevel.Direction = queued_orientation
-	queued_orientation = TileMapLevel.Direction.NONE
-	return return_direction
-
-func set_queued_direction(new_direction : TileMapLevel.Direction = TileMapLevel.Direction.NONE) -> void:
-	queued_orientation = new_direction
+	return brain.dequeue_direction() if brain else TileMapLevel.Direction.NONE
 
 #endregion
