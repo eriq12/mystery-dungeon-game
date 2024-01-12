@@ -14,15 +14,19 @@ var character_render : Node3D
 
 #region action/move data
 
-var orientation : TileMapLevel.Direction
+var orientation : TileMapLevel.Direction : get = _get_orientation, set = _set_orientation
 
 var has_queued_move : bool : get = _has_queued_move
 
-const walk_preset : CharacterMove = preload("res://moves/preset_moves/movement/walk_direction_move.tres")
+const walk_preset : CharacterMove = preload("res://resources/moves/preset_moves/movement/walk_direction_move.tres")
 
-const face_preset : CharacterMove = preload("res://moves/preset_moves/movement/face_direction_move.tres")
+const face_preset : CharacterMove = preload("res://resources/moves/preset_moves/movement/face_direction_move.tres")
 
 var brain : CharacterBrain : get = get_brain
+
+var _brain_cache : CharacterBrain
+
+var is_player_character : bool : get = _is_player_character
 
 #endregion
 
@@ -49,6 +53,16 @@ var view_range : int = 5
 
 func _ready() -> void:
 	character_render = get_child(0)
+	_update_brain()
+
+func _update_brain() -> void:
+	for node in get_children():
+		_brain_cache = node as CharacterBrain
+		if _brain_cache:
+			break
+
+func _is_player_character() -> bool:
+	return brain as PlayerBrain != null
 
 func set_grid_location(new_location : Vector3i) -> void:
 	location = new_location
@@ -62,23 +76,28 @@ func visual_look_at(relative_direction : Vector3) -> void:
 func set_view_distance(new_distance : int) -> void:
 	view_range = new_distance
 
+func _get_orientation() -> TileMapLevel.Direction:
+	return orientation
+
+func _set_orientation(new_direction : TileMapLevel.Direction) -> void:
+	if _brain_cache:
+		_brain_cache.orientation = new_direction
+	orientation = new_direction
+
 #region move queue handling
 
 func get_brain() -> CharacterBrain:
-	if brain != null:
-		return brain
-	for node in get_children():
-		if node.is_class("CharacterBrain"):
-			brain = node
-	return brain
+	if not _brain_cache :
+		_update_brain()
+	return _brain_cache
 
 func dequeue_move() -> CharacterMove:
-	return brain.dequeue_move() if brain else null
+	return _brain_cache.dequeue_move() if brain else null
 
 func _has_queued_move() -> bool:
-	return brain and brain.has_queued_move
+	return _brain_cache and _brain_cache.has_queued_move
 
 func dequeue_direction() -> TileMapLevel.Direction:
-	return brain.dequeue_direction() if brain else TileMapLevel.Direction.NONE
+	return _brain_cache.dequeue_direction() if _brain_cache else TileMapLevel.Direction.NONE
 
 #endregion

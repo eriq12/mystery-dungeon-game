@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://cfokocrhggagl"]
+[gd_scene load_steps=7 format=3 uid="uid://cfokocrhggagl"]
 
-[ext_resource type="Script" path="res://player.gd" id="1_cwk5d"]
+[ext_resource type="Script" path="res://scripts/character/information_and_logic/character.gd" id="1_7cexc"]
+[ext_resource type="Script" path="res://scripts/character/information_and_logic/character_brains/player.gd" id="2_wuhxv"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_nwqfe"]
 load_path = "res://.godot/imported/dungeon_texture.png-5fcb8371facfb08225b046b2444d2883.s3tc.ctex"
@@ -30,7 +31,7 @@ data = PackedVector3Array(0.3183, 0.8183, -0.3777, 0.3425, 0.8425, -0.5, 0.1061,
 
 [node name="Player" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
-script = ExtResource("1_cwk5d")
+script = ExtResource("1_7cexc")
 
 [node name="VisualAppearance" type="Node3D" parent="."]
 
@@ -52,3 +53,6 @@ size = 6.15006
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+
+[node name="PlayerBrain" type="Node" parent="."]
+script = ExtResource("2_wuhxv")

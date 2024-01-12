@@ -1,12 +1,12 @@
 [gd_scene load_steps=8 format=3 uid="uid://bvgo3btpijh74"]
 
-[ext_resource type="Script" path="res://area/dungeon.gd" id="1_i1xs4"]
-[ext_resource type="MeshLibrary" uid="uid://c62scvx55tx5t" path="res://floor_mesh_library_2.tres" id="1_ryi5a"]
-[ext_resource type="MeshLibrary" uid="uid://br1ri42vxlwcr" path="res://wall_tile_mesh_library.tres" id="2_7ykyt"]
-[ext_resource type="Script" path="res://area/tile_map_level.gd" id="3_s1kxi"]
-[ext_resource type="Script" path="res://area/entity_list.gd" id="4_afkpw"]
-[ext_resource type="MeshLibrary" uid="uid://bymcfwd8rntul" path="res://fog_of_war_mesh_library.tres" id="5_70bos"]
-[ext_resource type="Script" path="res://area/fog_of_war.gd" id="5_yqnsl"]
+[ext_resource type="Script" path="res://scripts/area/dungeon.gd" id="1_i1xs4"]
+[ext_resource type="MeshLibrary" uid="uid://c62scvx55tx5t" path="res://resources/mesh_libraries/floor_mesh_library_2.tres" id="1_ryi5a"]
+[ext_resource type="MeshLibrary" uid="uid://br1ri42vxlwcr" path="res://resources/mesh_libraries/wall_tile_mesh_library.tres" id="2_7ykyt"]
+[ext_resource type="Script" path="res://scripts/area/tile_map_level.gd" id="3_s1kxi"]
+[ext_resource type="Script" path="res://scripts/area/entity_list.gd" id="4_afkpw"]
+[ext_resource type="MeshLibrary" uid="uid://bymcfwd8rntul" path="res://resources/mesh_libraries/fog_of_war_mesh_library.tres" id="5_70bos"]
+[ext_resource type="Script" path="res://scripts/area/fog_of_war.gd" id="5_yqnsl"]
 
 [node name="Dungeon" type="Node3D" node_paths=PackedStringArray("dungeon_entities", "levels")]
 script = ExtResource("1_i1xs4")

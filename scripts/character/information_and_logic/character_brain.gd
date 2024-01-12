@@ -8,6 +8,8 @@ var _queued_orientation : TileMapLevel.Direction = TileMapLevel.Direction.NONE
 
 var _queued_move : CharacterMove
 
+var orientation : TileMapLevel.Direction
+
 #region move processing
 
 func _has_queued_move() -> bool:

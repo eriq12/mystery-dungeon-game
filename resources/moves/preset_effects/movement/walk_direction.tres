@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="Move_Effect_Movement" load_steps=2 format=3 uid="uid://6otubvnnfsht"]
 
-[ext_resource type="Script" path="res://character/action/move/effect_variants/move_effect_movement.gd" id="1_loxuq"]
+[ext_resource type="Script" path="res://scripts/character/action/move/effect_variants/move_effect_movement.gd" id="1_loxuq"]
 
 [resource]
 script = ExtResource("1_loxuq")

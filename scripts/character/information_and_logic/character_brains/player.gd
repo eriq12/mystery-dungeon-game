@@ -1,10 +1,6 @@
-extends Character
+extends CharacterBrain
 
-class_name Player
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	character_render = get_child(0)
+class_name PlayerBrain
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta : float) -> void:
@@ -22,8 +18,8 @@ func _process(_delta : float) -> void:
 		set_queued_direction()
 	if not new_direction == TileMapLevel.Direction.NONE:
 		if new_direction == orientation:
-			set_queued_move(walk_preset)
+			set_queued_move(Library.basic_move)
 		else:
-			set_queued_move(face_preset)
+			set_queued_move(Library.basic_face)
 			set_queued_direction(new_direction)
 

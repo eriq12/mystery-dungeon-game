@@ -30,7 +30,7 @@ func enter_character(character:Character, entering_level_index : int = default_e
 		entering_endpoint = 0
 	if character:
 		dungeon_entities.add_entity(character)
-		if character as Player and not entrance_level.is_reveal_signal_connected(character.on_location_change):
+		if character.is_player_character and not entrance_level.is_reveal_signal_connected(character.on_location_change):
 			# connect change to location
 			entrance_level.connect_reveal_signal(character.on_location_change)
 		if not _move_character(character, entrance_level.dungeon_endpoints[entering_endpoint], entering_level_index):

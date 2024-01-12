@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CharacterMove" load_steps=3 format=3 uid="uid://ck34f8w7gveh1"]
+
+[ext_resource type="Resource" uid="uid://sq1pqp11ncv2" path="res://resources/moves/preset_effects/movement/face_direction.tres" id="1_3qu6l"]
+[ext_resource type="Script" path="res://scripts/character/action/move/character_move.gd" id="1_kooku"]
+
+[resource]
+script = ExtResource("1_kooku")
+target_characters = true
+effects = Array[Resource("res://scripts/character/action/move/move_effect.gd")]([ExtResource("1_3qu6l")])
+stamina_cost = 0.1

@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="MysteryDungeonGame"
-run/main_scene="res://test_scene.tscn"
+run/main_scene="res://resources/scenes/test_scene.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+Library="*res://scripts/singletons/library.gd"
 
 [debug]
 
