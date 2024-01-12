@@ -19,3 +19,4 @@ mono_crash.*.json
 
 #addons ignores to reduce copies
 addons/
+script_templates/
