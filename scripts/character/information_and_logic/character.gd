@@ -6,8 +6,6 @@ class_name Character
 
 var character_id : int
 
-var character_model : Mesh
-
 var character_render : Node3D
 
 #endregion
