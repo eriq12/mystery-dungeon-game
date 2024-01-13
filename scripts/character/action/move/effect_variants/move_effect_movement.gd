@@ -1,6 +1,6 @@
 extends MoveEffect
 
-class_name Move_Effect_Movement
+class_name MoveEffectMovement
 
 @export var movement_targeting : Targeting_Type = Targeting_Type.SELF
 
