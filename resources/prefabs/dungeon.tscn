@@ -15,7 +15,7 @@ levels = [NodePath("TileMapLevel")]
 
 [node name="TileMapLevel" type="Node3D" parent="."]
 script = ExtResource("3_s1kxi")
-dungeon_endpoints = Array[Vector3i]([Vector3i(0, 0, 0)])
+dungeon_endpoints = Array[Vector2i]([Vector2i(0, 0)])
 
 [node name="LevelFloor" type="GridMap" parent="TileMapLevel"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)

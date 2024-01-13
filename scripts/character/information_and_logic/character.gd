@@ -36,8 +36,11 @@ var stamina : float = 0
 
 #region location data
 
-signal on_location_change(new_location : Vector3i)
-var location : Vector3i
+signal on_location_change(new_location : Vector2i, view_range : int)
+
+var location : Vector2i
+
+var level_id : int
 
 #endregion
 
@@ -60,9 +63,12 @@ func _update_brain() -> void:
 func _is_player_character() -> bool:
 	return brain as PlayerBrain != null
 
-func set_grid_location(new_location : Vector3i) -> void:
+func set_grid_location(new_location : Vector2i) -> void:
 	location = new_location
 	on_location_change.emit(new_location, view_range)
+
+func set_level_location(new_level_id : int) -> void:
+	level_id = new_level_id
 
 func visual_look_at(relative_direction : Vector3) -> void:
 	if not character_render:

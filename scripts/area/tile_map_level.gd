@@ -8,7 +8,7 @@ enum Direction {NONE=-1, NORTH, EAST, SOUTH, WEST};
 
 enum Tile_Status {EMPTY=-1, ITEM, OCCUPIED, IMPASSIBLE}
 
-const preset_direction : Array[Vector3i] = [Vector3i.FORWARD, Vector3i.RIGHT, Vector3i.BACK, Vector3i.LEFT]
+const preset_direction : Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
 
 @export var max_bound_from_origin : int = 32
 
@@ -20,7 +20,7 @@ const preset_direction : Array[Vector3i] = [Vector3i.FORWARD, Vector3i.RIGHT, Ve
 
 @export var dungeon_fog_of_war : FogOfWar
 
-@export var dungeon_endpoints : Array[Vector3i]
+@export var dungeon_endpoints : Array[Vector2i]
 
 @onready var reveal_change_processor : Callable = Callable(self, "_update_reveal_tiles")
 
@@ -43,7 +43,8 @@ func _ready() -> void:
 func _process(_delta : float) -> void:
 	pass
 
-func get_view_tiles(location : Vector3i, callback : Callable, view_distance : int, accuracy_band : int = 1) -> void:
+func get_view_tiles(v2location : Vector2i, callback : Callable, view_distance : int, accuracy_band : int = 1) -> void:
+	var location : Vector3i = Vector3i(v2location.x, 0, v2location.y)
 	var angles : Array[float] = []
 	for section in range(4):
 		angles.append(PI/2 * section)
@@ -100,7 +101,7 @@ func _is_tile_obstructed(view_point : Vector3i, tile_viewed : Vector3i) -> bool:
 	var tile_vertical_closer : Vector3i = tile_viewed + Vector3i.BACK * delta_z
 	return _get_tile_status(tile_horizontal_closer) == Tile_Status.IMPASSIBLE and _get_tile_status(tile_vertical_closer) == Tile_Status.IMPASSIBLE
 
-func _update_reveal_tiles(location : Vector3i, view_distance : int) -> void:
+func _update_reveal_tiles(location : Vector2i, view_distance : int) -> void:
 	var view_tiles : Array[Vector3i] = []
 	get_view_tiles(location,
 		func (tile : Vector3i) -> void:

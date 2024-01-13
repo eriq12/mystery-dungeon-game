@@ -33,23 +33,32 @@ func enter_character(character:Character, entering_level_index : int = default_e
 		if character.is_player_character and not entrance_level.is_reveal_signal_connected(character.on_location_change):
 			# connect change to location
 			entrance_level.connect_reveal_signal(character.on_location_change)
-		if not _move_character(character, entrance_level.dungeon_endpoints[entering_endpoint], entering_level_index):
+		if not _set_character_location(character, entrance_level.dungeon_endpoints[entering_endpoint], entering_level_index):
 			return false
 		return true
 	return false
 
-func _move_character(character : Character, location_offset : Vector3i, level : int = -1) -> bool:
+func spawn_entity(entity : PackedScene, level_id : int) -> void:
+	pass
+
+func _move_character(character : Character, location_offset : Vector2i, level : int = -1) -> bool:
+	var location : Vector2i = character.location + location_offset
+	return _set_character_location(character, location, level)
+
+func _set_character_location(character : Character, location : Vector2i, level : int = -1) -> bool:
 	if level < 0:
 		level = dungeon_entities.associated_floor_level[character]
 	if level >= len(levels):
 		return false
-	var location : Vector3i = character.location + location_offset
-	if levels[level]._get_tile_status(location) < TileMapLevel.Tile_Status.OCCUPIED:
+	var v3location : Vector3i = Vector3i(location.x, 0, location.y)
+	if levels[level]._get_tile_status(v3location) < TileMapLevel.Tile_Status.OCCUPIED:
 		character.set_grid_location(location)
+		character.set_level_location(level)
 		# assumes that the cell size for the gridmap is 2x2x2
-		character.transform.origin = dungeon_entities.to_local(levels[level].get_global_tile_position(location))
+		character.transform.origin = dungeon_entities.to_local(levels[level].get_global_tile_position(v3location))
 		return true
 	return false
+
 
 func _orient_character(character : Character, direction : TileMapLevel.Direction) -> void:
 	match direction:
@@ -76,7 +85,7 @@ func process_move_effect(caster : Character, effect : MoveEffect) -> void:
 		direction = caster.orientation
 	match effect.type_effect:
 		MoveEffect.Type_Effect.MOVEMENT:
-			var movement_effect : Move_Effect_Movement = effect as Move_Effect_Movement
+			var movement_effect : MoveEffectMovement = effect as MoveEffectMovement
 			if not movement_effect:
 				return
 			if movement_effect.tiles_moved > 0:

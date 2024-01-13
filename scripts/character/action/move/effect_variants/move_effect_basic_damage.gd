@@ -1,0 +1,3 @@
+extends MoveEffect
+
+class_name MoveEffectBasicDamage
