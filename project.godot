@@ -17,7 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Library="*res://scripts/singletons/library.gd"
+Library="*res://resources/singletons/library.tscn"
 
 [debug]
 
