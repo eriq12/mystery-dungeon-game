@@ -43,35 +43,6 @@ func _ready() -> void:
 func _process(_delta : float) -> void:
 	pass
 
-func apply_on_viewable_tiles_from(v2location : Vector2i, callback : Callable, view_distance : int, accuracy_band : int = 2) -> void:
-	var location : Vector3i = Vector3i(v2location.x, 0, v2location.y)
-	var angles : Array[float] = []
-	for section in range(4):
-		angles.append(PI/2 * section)
-	for visibility_range : int in range(view_distance + 1 - accuracy_band, view_distance + 1):
-		for section : int in range(4):
-			for step : int in range(1, visibility_range):
-				angles.append(atan(step as float / (visibility_range - step)) + PI/2 * section)
-	var quick_access : Dictionary = {}
-	for angle : float in angles:
-		var forward_ratio : float = sin(angle)
-		var horizontal_ratio : float = cos(angle)
-		for distance : int in range(view_distance):
-			var tile : Vector3i = location + Vector3i.FORWARD * (round(forward_ratio * distance) as int) + Vector3i.RIGHT * (round(horizontal_ratio * distance) as int)
-			if quick_access.has(tile):
-				if quick_access[tile]:
-					continue
-				else:
-					break
-			if _is_tile_obstructed(location, tile):
-				quick_access[tile] = false
-				break
-			callback.call(tile)
-			if _get_tile_status(tile) == Tile_Status.IMPASSIBLE:
-				quick_access[tile] = false
-				break
-			quick_access[tile] = true
-
 func get_manhattan_approx(point1 : Vector3i, point2 : Vector3i) -> int:
 	return abs(point1.x - point2.x) + abs(point1.y - point2.y) + abs(point1.z - point2.z)
 
@@ -103,8 +74,37 @@ func _is_tile_obstructed(view_point : Vector3i, tile_viewed : Vector3i) -> bool:
 
 func _update_reveal_tiles(location : Vector2i, view_distance : int) -> void:
 	var view_tiles : Array[Vector3i] = []
-	apply_on_viewable_tiles_from(location,
+	_apply_on_viewable_tiles_from(location,
 		func (tile : Vector3i) -> void:
 			view_tiles.append(tile)
 	, view_distance, 2)
 	dungeon_fog_of_war.change_reveal_tiles_to(view_tiles)
+
+func _apply_on_viewable_tiles_from(v2location : Vector2i, callback : Callable, view_distance : int, accuracy_band : int = 2) -> void:
+	var location : Vector3i = Vector3i(v2location.x, 0, v2location.y)
+	var angles : Array[float] = []
+	for section in range(4):
+		angles.append(PI/2 * section)
+	for visibility_range : int in range(view_distance + 1 - accuracy_band, view_distance + 1):
+		for section : int in range(4):
+			for step : int in range(1, visibility_range):
+				angles.append(atan(step as float / (visibility_range - step)) + PI/2 * section)
+	var quick_access : Dictionary = {}
+	for angle : float in angles:
+		var forward_ratio : float = sin(angle)
+		var horizontal_ratio : float = cos(angle)
+		for distance : int in range(view_distance):
+			var tile : Vector3i = location + Vector3i.FORWARD * (round(forward_ratio * distance) as int) + Vector3i.RIGHT * (round(horizontal_ratio * distance) as int)
+			if quick_access.has(tile):
+				if quick_access[tile]:
+					continue
+				else:
+					break
+			if _is_tile_obstructed(location, tile):
+				quick_access[tile] = false
+				break
+			callback.call(tile)
+			if _get_tile_status(tile) == Tile_Status.IMPASSIBLE:
+				quick_access[tile] = false
+				break
+			quick_access[tile] = true
