@@ -24,9 +24,13 @@ var is_player_character : bool : get = _is_player_character
 
 #endregion
 
-#region stamina
+#region character stats
 
-@export var stamina_maximum : float = 1
+@export var base_stats : CharacterBaseStats
+
+@export var stats : CharacterStats
+
+var stamina_maximum : float : get = get_maximum_stamina
 
 var stamina : float = 0
 
@@ -51,6 +55,10 @@ var view_range : int = 5
 func _ready() -> void:
 	character_render = get_child(0)
 	_update_brain()
+	if not base_stats:
+		base_stats = load("res://resources/character_base_stat_data/adventurer.tres") as CharacterBaseStats
+	if not stats:
+		stats = CharacterStats.new(base_stats)
 
 func _update_brain() -> void:
 	for node in get_children():
@@ -100,4 +108,10 @@ func _has_queued_move() -> bool:
 func dequeue_direction() -> TileMapLevel.Direction:
 	return _brain_cache.dequeue_direction() if _brain_cache else TileMapLevel.Direction.NONE
 
+#endregion
+
+#region stats getters
+
+func get_maximum_stamina() -> float:
+	return stats.stamina
 #endregion
