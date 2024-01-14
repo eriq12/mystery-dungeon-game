@@ -38,8 +38,12 @@ func enter_character(character:Character, entering_level_index : int = default_e
 		return true
 	return false
 
-func spawn_entity(entity : PackedScene, level_id : int) -> void:
-	pass
+func spawn_entity(entity : PackedScene, level_id : int, location: Vector2i) -> void:
+	var character : Character = entity.instantiate()
+	if not character:
+		return
+	dungeon_entities.add_entity(character, level_id)
+	_set_character_location(character, location, level_id)
 
 func _move_character(character : Character, location_offset : Vector2i, level : int = -1) -> bool:
 	var location : Vector2i = character.location + location_offset
