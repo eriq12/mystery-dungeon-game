@@ -43,7 +43,7 @@ func _ready() -> void:
 func _process(_delta : float) -> void:
 	pass
 
-func get_view_tiles(v2location : Vector2i, callback : Callable, view_distance : int, accuracy_band : int = 1) -> void:
+func apply_on_viewable_tiles_from(v2location : Vector2i, callback : Callable, view_distance : int, accuracy_band : int = 2) -> void:
 	var location : Vector3i = Vector3i(v2location.x, 0, v2location.y)
 	var angles : Array[float] = []
 	for section in range(4):
@@ -103,7 +103,7 @@ func _is_tile_obstructed(view_point : Vector3i, tile_viewed : Vector3i) -> bool:
 
 func _update_reveal_tiles(location : Vector2i, view_distance : int) -> void:
 	var view_tiles : Array[Vector3i] = []
-	get_view_tiles(location,
+	apply_on_viewable_tiles_from(location,
 		func (tile : Vector3i) -> void:
 			view_tiles.append(tile)
 	, view_distance, 2)
