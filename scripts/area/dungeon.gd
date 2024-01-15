@@ -56,16 +56,15 @@ func _set_character_location(character : Character, location : Vector2i, level :
 		level = old_level
 	if level >= len(levels) or level < 0:
 		return false
-	var v3location : Vector3i = Vector3i(location.x, 0, location.y)
-	if level != old_level or levels[level].update_character_location(character, v3location):
+	if level != old_level or levels[level].update_character_location(character, location):
 		character.set_grid_location(location)
 		character.set_level_location(level)
 		if level != old_level:
 			if old_level >= 0:
 				levels[old_level].remove_character(character)
-			levels[level].enter_character(character, v3location)
+			levels[level].enter_character(character, location)
 			dungeon_entities.associated_floor_level[character] = level
-		character.transform.origin = dungeon_entities.to_local(levels[level].get_global_tile_position(v3location))
+		character.transform.origin = dungeon_entities.to_local(levels[level].get_global_tile_position(location))
 		return true
 	return false
 
