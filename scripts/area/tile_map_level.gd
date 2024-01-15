@@ -6,7 +6,7 @@ class_name TileMapLevel
 
 enum Direction {NONE=-1, NORTH, EAST, SOUTH, WEST};
 
-enum Tile_Status {EMPTY=-1, ITEM, OCCUPIED, IMPASSIBLE}
+enum Tile_Status {EMPTY=-1, ITEM, OCCUPIED, NONSOLID, IMPASSIBLE}
 
 const preset_direction : Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
 
@@ -14,13 +14,25 @@ const preset_direction : Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2
 
 #endregion
 
+#region gridmaps
+
 @export var level_wall : GridMap
 
 @export var level_floor : GridMap
 
-@export var dungeon_fog_of_war : FogOfWar
+@export var level_fog_of_war : FogOfWar
 
-@export var dungeon_endpoints : Array[Vector2i]
+#endregion
+
+#region data
+
+@export var level_endpoints : Array[Vector2i]
+
+var entities_by_location : Dictionary
+
+var entity_locations : Dictionary
+
+#endregion
 
 @onready var reveal_change_processor : Callable = Callable(self, "_update_reveal_tiles")
 
@@ -30,18 +42,15 @@ func _ready() -> void:
 		level_floor = get_node("LevelFloor")
 	if not level_wall and has_node("LevelWall"):
 		level_wall = get_node("LevelWall")
-	if not dungeon_fog_of_war and has_node("FogOfWar"):
-		dungeon_fog_of_war = get_node("FogOfWar") as FogOfWar
+	if not level_fog_of_war and has_node("FogOfWar"):
+		level_fog_of_war = get_node("FogOfWar") as FogOfWar
 		for x : int in range(-max_bound_from_origin, max_bound_from_origin):
 			for z : int in range(-max_bound_from_origin, max_bound_from_origin):
-				dungeon_fog_of_war.set_cell_item(Vector3i(x, 0, z), 0)
-	if len(dungeon_endpoints) == 0:
-		dungeon_endpoints.append(Vector3i(0,0,0))
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta : float) -> void:
-	pass
+				level_fog_of_war.set_cell_item(Vector3i(x, 0, z), 0)
+	if len(level_endpoints) == 0:
+		level_endpoints.append(Vector3i(0,0,0))
+	entities_by_location = {}
+	entity_locations = {}
 
 func get_manhattan_approx(point1 : Vector3i, point2 : Vector3i) -> int:
 	return abs(point1.x - point2.x) + abs(point1.y - point2.y) + abs(point1.z - point2.z)
@@ -49,15 +58,50 @@ func get_manhattan_approx(point1 : Vector3i, point2 : Vector3i) -> int:
 func get_global_tile_position(location : Vector3i) -> Vector3:
 	return level_floor.to_global(level_floor.map_to_local(location) + Vector3.DOWN)
 
+#region character locations
+
+func enter_character(character : Character, location : Vector3i) -> bool:
+	if entity_locations.has(character) or _get_tile_status(location) != Tile_Status.EMPTY:
+		return false
+	entities_by_location[location] = character
+	entity_locations[character] = location
+	return false
+
+func remove_character(character : Character) -> bool:
+	if not entity_locations.has(character):
+		return false
+	entities_by_location.erase(entity_locations[character])
+	entity_locations.erase(character)
+	return true
+
+func update_character_location(character : Character, new_location : Vector3i) -> bool:
+	if not entity_locations.has(character) or _get_tile_status(new_location) >= Tile_Status.OCCUPIED:
+		return false
+	if entity_locations[character] != new_location:
+		entities_by_location.erase(entity_locations[character])
+		entities_by_location[new_location] = character
+		entity_locations[character] = new_location
+	return true
+
+#endregion
+
+#region signal related
+
 func is_reveal_signal_connected(reveal_signal : Signal) -> bool:
 	return reveal_signal.is_connected(reveal_change_processor)
 
 func connect_reveal_signal(reveal_signal : Signal) -> void:
 	reveal_signal.connect(reveal_change_processor)
 
+#endregion
+
+#region helper methods
+
 func _get_tile_status(location : Vector3i) -> Tile_Status:
 	match level_wall.get_cell_item(location):
 		GridMap.INVALID_CELL_ITEM:
+			if entities_by_location.has(location):
+				return Tile_Status.OCCUPIED
 			return Tile_Status.EMPTY
 	return Tile_Status.IMPASSIBLE
 
@@ -78,7 +122,10 @@ func _update_reveal_tiles(location : Vector2i, view_distance : int) -> void:
 		func (tile : Vector3i) -> void:
 			view_tiles.append(tile)
 	, view_distance, 2)
-	dungeon_fog_of_war.change_reveal_tiles_to(view_tiles)
+	level_fog_of_war.change_reveal_tiles_to(view_tiles)
+
+func _get_local_area_from(v2location : Vector2i, view_distance : int) -> LocalAreaData:
+	return null
 
 func _apply_on_viewable_tiles_from(v2location : Vector2i, callback : Callable, view_distance : int, accuracy_band : int = 2) -> void:
 	var location : Vector3i = Vector3i(v2location.x, 0, v2location.y)
@@ -108,3 +155,5 @@ func _apply_on_viewable_tiles_from(v2location : Vector2i, callback : Callable, v
 				quick_access[tile] = false
 				break
 			quick_access[tile] = true
+
+#endregion

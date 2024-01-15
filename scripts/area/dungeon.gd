@@ -26,14 +26,14 @@ func _ready()  -> void:
 
 func enter_character(character:Character, entering_level_index : int = default_entrance_entry_point_index, entering_endpoint : int = default_entrance_level_index) -> bool:
 	var entrance_level : TileMapLevel = levels[entering_level_index]
-	if entering_endpoint >= len(entrance_level.dungeon_endpoints):
+	if entering_endpoint >= len(entrance_level.level_endpoints):
 		entering_endpoint = 0
 	if character:
 		dungeon_entities.add_entity(character)
 		if character.is_player_character and not entrance_level.is_reveal_signal_connected(character.on_location_change):
 			# connect change to location
 			entrance_level.connect_reveal_signal(character.on_location_change)
-		if not _set_character_location(character, entrance_level.dungeon_endpoints[entering_endpoint], entering_level_index):
+		if not _set_character_location(character, entrance_level.level_endpoints[entering_endpoint], entering_level_index):
 			return false
 		return true
 	return false
@@ -42,23 +42,29 @@ func spawn_entity(entity : PackedScene, level_id : int, location: Vector2i) -> v
 	var character : Character = entity.instantiate()
 	if not character:
 		return
-	dungeon_entities.add_entity(character, level_id)
-	_set_character_location(character, location, level_id)
+	dungeon_entities.add_entity(character)
+	if not _set_character_location(character, location, level_id):
+		character.free()
 
 func _move_character(character : Character, location_offset : Vector2i, level : int = -1) -> bool:
 	var location : Vector2i = character.location + location_offset
 	return _set_character_location(character, location, level)
 
 func _set_character_location(character : Character, location : Vector2i, level : int = -1) -> bool:
+	var old_level : int = dungeon_entities.associated_floor_level[character] if dungeon_entities.associated_floor_level.has(character) else -1
 	if level < 0:
-		level = dungeon_entities.associated_floor_level[character]
-	if level >= len(levels):
+		level = old_level
+	if level >= len(levels) or level < 0:
 		return false
 	var v3location : Vector3i = Vector3i(location.x, 0, location.y)
-	if levels[level]._get_tile_status(v3location) < TileMapLevel.Tile_Status.OCCUPIED:
+	if level != old_level or levels[level].update_character_location(character, v3location):
 		character.set_grid_location(location)
 		character.set_level_location(level)
-		# assumes that the cell size for the gridmap is 2x2x2
+		if level != old_level:
+			if old_level >= 0:
+				levels[old_level].remove_character(character)
+			levels[level].enter_character(character, v3location)
+			dungeon_entities.associated_floor_level[character] = level
 		character.transform.origin = dungeon_entities.to_local(levels[level].get_global_tile_position(v3location))
 		return true
 	return false

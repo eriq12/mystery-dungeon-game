@@ -28,3 +28,11 @@ func add_entity(entity : Character, level_id : int = -1) -> void:
 	add_child(entity)
 	entity.stamina = 0
 	associated_floor_level[entity] = level_id
+
+func get_entity_level(character : Character) -> int:
+	if not associated_floor_level.has(character):
+		return -1
+	return associated_floor_level[character]
+
+func update_character_floor_level(character : Character, level_id : int) -> void:
+	associated_floor_level[character] = level_id
