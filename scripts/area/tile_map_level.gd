@@ -101,7 +101,7 @@ func _get_tile_status(v2location : Vector2i) -> Tile_Status:
 	var location : Vector3i = v2location.x * Vector3i.RIGHT + v2location.y * Vector3i.BACK
 	match level_wall.get_cell_item(location):
 		GridMap.INVALID_CELL_ITEM:
-			if entities_by_location.has(location):
+			if entities_by_location.has(v2location):
 				return Tile_Status.OCCUPIED
 			return Tile_Status.EMPTY
 	return Tile_Status.IMPASSIBLE
@@ -119,7 +119,7 @@ func _is_tile_obstructed(view_point : Vector2i, tile_viewed : Vector2i) -> bool:
 
 func _update_reveal_tiles(location : Vector2i, view_distance : int) -> void:
 	var view_tiles : Array[Vector2i] = []
-	_apply_on_viewable_tiles_from(location,
+	apply_on_viewable_tiles_from(location,
 		func (tile : Vector2i) -> void:
 			view_tiles.append(tile)
 	, view_distance, 2)
@@ -128,7 +128,7 @@ func _update_reveal_tiles(location : Vector2i, view_distance : int) -> void:
 func _get_local_area_from(location : Vector2i, view_distance : int) -> LocalAreaData:
 	return null
 
-func _apply_on_viewable_tiles_from(location : Vector2i, callback : Callable, view_distance : int, accuracy_band : int = 2) -> void:
+func apply_on_viewable_tiles_from(location : Vector2i, callback : Callable, view_distance : int, accuracy_band : int = 2) -> void:
 	var angles : Array[float] = []
 	for section in range(4):
 		angles.append(PI/2 * section)
@@ -138,22 +138,25 @@ func _apply_on_viewable_tiles_from(location : Vector2i, callback : Callable, vie
 				angles.append(atan(step as float / (visibility_range - step)) + PI/2 * section)
 	var quick_access : Dictionary = {}
 	for angle : float in angles:
-		var forward_ratio : float = sin(angle)
-		var horizontal_ratio : float = cos(angle)
-		for distance : int in range(view_distance):
-			var tile : Vector2i = location + Vector2i((round(forward_ratio * distance) as int), (round(horizontal_ratio * distance) as int))
-			if quick_access.has(tile):
-				if quick_access[tile]:
-					continue
-				else:
-					break
-			if _is_tile_obstructed(location, tile):
-				quick_access[tile] = false
+		apply_on_line_from(location, callback, view_distance, angle, quick_access)
+
+func apply_on_line_from(location : Vector2i, callback : Callable, view_distance : int, angle : float, valid_cache : Dictionary = {}) -> void:
+	var forward_ratio : float = sin(angle)
+	var horizontal_ratio : float = cos(angle)
+	for distance : int in range(view_distance):
+		var tile : Vector2i = location + Vector2i((round(forward_ratio * distance) as int), (round(horizontal_ratio * distance) as int))
+		if valid_cache.has(tile):
+			if valid_cache[tile]:
+				continue
+			else:
 				break
-			callback.call(tile)
-			if _get_tile_status(tile) == Tile_Status.IMPASSIBLE:
-				quick_access[tile] = false
-				break
-			quick_access[tile] = true
+		if _is_tile_obstructed(location, tile):
+			valid_cache[tile] = false
+			break
+		callback.call(tile)
+		if _get_tile_status(tile) == Tile_Status.IMPASSIBLE:
+			valid_cache[tile] = false
+			break
+		valid_cache[tile] = true
 
 #endregion

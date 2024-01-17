@@ -88,26 +88,24 @@ func _orient_character(character : Character, direction : TileMapLevel.Direction
 
 #region move processing
 
-func process_move_effect(caster : Character, effect : MoveEffect) -> void:
+func process_move_action(caster : Character, action : MoveAction, desired_direction : TileMapLevel.Direction) -> void:
 	var direction : TileMapLevel.Direction = caster.dequeue_direction()
 	if direction == TileMapLevel.Direction.NONE:
 		direction = caster.orientation
-	match effect.type_effect:
-		MoveEffect.Type_Effect.MOVEMENT:
-			var movement_effect : MoveEffectMovement = effect as MoveEffectMovement
-			if not movement_effect:
-				return
-			if movement_effect.tiles_moved > 0:
-				_move_character(caster, TileMapLevel.preset_direction[direction])
-			elif direction != TileMapLevel.Direction.NONE:
-				_orient_character(caster, direction)
-		MoveEffect.Type_Effect.HEALTH_EFFECT:
-			
-			pass
+	match action.targeting:
+		MoveAction.Targeting_Type.SELF:
+			match action.move_effect.type_effect:
+				MoveEffect.Type_Effect.ORIENT:
+					_orient_character(caster, desired_direction)
+		MoveAction.Targeting_Type.FRONT:
+			match action.move_effect.type_effect:
+				MoveEffect.Type_Effect.MOVEMENT:
+					_move_character(caster, TileMapLevel.preset_direction[caster.orientation])
 
 func _on_entity_list_character_cast_move(character:Character, move:CharacterMove) -> void:
 	if character.stamina >= move.stamina_cost:
 		character.stamina -= move.stamina_cost
-		move.effects.all(func(effect : MoveEffect) -> void : process_move_effect(character, effect))
+		var new_direction : TileMapLevel.Direction = character.dequeue_direction()
+		move.actions.all(func(action : MoveAction) -> void : process_move_action(character, action, new_direction))
 
 #endregion

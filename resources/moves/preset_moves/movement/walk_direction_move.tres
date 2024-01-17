@@ -1,10 +1,19 @@
-[gd_resource type="Resource" script_class="CharacterMove" load_steps=3 format=3 uid="uid://codt0bd7jqmqj"]
+[gd_resource type="Resource" script_class="CharacterMove" load_steps=6 format=3 uid="uid://cnevd5ls3teb4"]
 
-[ext_resource type="Resource" uid="uid://6otubvnnfsht" path="res://resources/moves/preset_effects/movement/walk_direction.tres" id="1_aublo"]
-[ext_resource type="Script" path="res://scripts/character/action/move/character_move.gd" id="1_ukvde"]
+[ext_resource type="Script" path="res://scripts/character/move/character_move.gd" id="1_3pvco"]
+[ext_resource type="Script" path="res://scripts/character/move/effect_variants/move_effect_wildcard.gd" id="1_bf6w8"]
+[ext_resource type="Script" path="res://scripts/character/move/action/front_action.gd" id="2_nijr2"]
+
+[sub_resource type="Resource" id="Resource_08cov"]
+script = ExtResource("1_bf6w8")
+_effect = 0
+
+[sub_resource type="Resource" id="Resource_yi1xq"]
+script = ExtResource("2_nijr2")
+move_effect = SubResource("Resource_08cov")
 
 [resource]
-script = ExtResource("1_ukvde")
+script = ExtResource("1_3pvco")
 target_characters = true
-effects = Array[Resource("res://scripts/character/action/move/move_effect.gd")]([ExtResource("1_aublo")])
+actions = Array[Resource("res://scripts/character/move/move_action.gd")]([SubResource("Resource_yi1xq")])
 stamina_cost = 0.25
