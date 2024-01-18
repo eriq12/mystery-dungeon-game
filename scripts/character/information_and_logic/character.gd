@@ -30,9 +30,13 @@ var is_player_character : bool : get = _is_player_character
 
 @export var stats : CharacterStats
 
+var alive : bool : get = _is_alive
+
 var stamina_maximum : float : get = get_maximum_stamina
 
 var stamina : float = 0
+
+signal on_death(character : Character)
 
 #endregion
 
@@ -69,6 +73,15 @@ func _update_brain() -> void:
 func _is_player_character() -> bool:
 	return brain as PlayerBrain != null
 
+#region health handling
+
+func damage(damage_value : int) -> int:
+	return stats.deplete_health_by(damage_value)
+
+#endregion
+
+#region location and orientation handling
+
 func set_grid_location(new_location : Vector2i) -> void:
 	location = new_location
 	on_location_change.emit(new_location, view_range)
@@ -92,6 +105,8 @@ func _set_orientation(new_direction : TileMapLevel.Direction) -> void:
 		_brain_cache.orientation = new_direction
 	orientation = new_direction
 
+#endregion
+
 #region move queue handling
 
 func get_brain() -> CharacterBrain:
@@ -114,4 +129,10 @@ func dequeue_direction() -> TileMapLevel.Direction:
 
 func get_maximum_stamina() -> float:
 	return stats.stamina
+
+func _is_alive() -> bool:
+	return stats and stats.is_alive
+
+func _to_string() -> String:
+	return stats._to_string()
 #endregion

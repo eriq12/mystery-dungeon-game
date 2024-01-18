@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://bfkau3jdnily1"]
+
+[ext_resource type="Script" path="res://scripts/character/information_and_logic/character.gd" id="1_56i2c"]
+[ext_resource type="Resource" uid="uid://bnnbkt6bclgfh" path="res://resources/character_base_stat_data/training_dummy.tres" id="2_85cva"]
+[ext_resource type="ArrayMesh" uid="uid://c7mh482wa6xxs" path="res://addons/kaykit_dungeon_remastered/Assets/obj/column.obj" id="2_eyyvf"]
+
+[node name="TrainingDummy" type="Node3D"]
+script = ExtResource("1_56i2c")
+base_stats = ExtResource("2_85cva")
+
+[node name="VisualAppearance" type="Node3D" parent="."]
+
+[node name="Column" type="MeshInstance3D" parent="VisualAppearance"]
+mesh = ExtResource("2_eyyvf")
+skeleton = NodePath("../..")

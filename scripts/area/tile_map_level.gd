@@ -10,6 +10,8 @@ enum Tile_Status {EMPTY=-1, ITEM, OCCUPIED, NONSOLID, IMPASSIBLE}
 
 const preset_direction : Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
 
+const preset_angle : Array[float] = [PI/2.0, PI, 3.0*PI/2.0, 0]
+
 @export var max_bound_from_origin : int = 32
 
 #endregion
@@ -82,6 +84,20 @@ func update_character_location(character : Character, new_location : Vector2i) -
 		entities_by_location[new_location] = character
 		entity_locations[character] = new_location
 	return true
+
+#endregion
+
+#region field-collision detection
+# yes I know it's a poor implementation but it should work
+func get_character_by_location(location : Vector2i) -> Character:
+	return null if not entities_by_location.has(location) else entities_by_location[location]
+
+func get_characters_by_locations(locations : Array[Vector2i]) -> Array[Character]:
+	var found_characters : Array[Character] = []
+	for location : Vector2i in locations:
+		if entities_by_location.has(location):
+			found_characters.append(entities_by_location[location])
+	return found_characters
 
 #endregion
 

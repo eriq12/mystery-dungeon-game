@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="MoveEffectDamage" load_steps=2 format=3 uid="uid://ckf801gp2wfw"]
+
+[ext_resource type="Script" path="res://scripts/character/move/effect_variants/move_effect_basic_damage.gd" id="1_68w1k"]
+
+[resource]
+script = ExtResource("1_68w1k")
+damage_value = 5

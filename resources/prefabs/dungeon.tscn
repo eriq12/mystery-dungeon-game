@@ -15,3 +15,4 @@ levels = [NodePath("TileMapLevel")]
 script = ExtResource("4_afkpw")
 
 [connection signal="character_cast_move" from="EntityList" to="." method="_on_entity_list_character_cast_move"]
+[connection signal="character_death" from="EntityList" to="." method="_on_character_death"]

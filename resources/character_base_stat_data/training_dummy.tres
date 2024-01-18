@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CharacterBaseStats" load_steps=2 format=3 uid="uid://bnnbkt6bclgfh"]
+
+[ext_resource type="Script" path="res://scripts/character/information_and_logic/character_stats/character_type_base_stats.gd" id="1_rsgkb"]
+
+[resource]
+script = ExtResource("1_rsgkb")
+character_class_name = "Training Dummy"
+health = 20
+attack = 5
+defense = 5
+stamina = 1
+growth = 0
+max_heath_multiplier = 0.0
+max_attack_multiplier = 2.0
+max_defense_multiplier = 2.0
+max_stamina_multiplier = 2.0
