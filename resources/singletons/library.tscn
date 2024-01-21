@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://darh1t4kohbt2"]
+
+[ext_resource type="Script" path="res://scripts/singletons/library.gd" id="1_jd56f"]
+
+[node name="Library" type="Node"]
+script = ExtResource("1_jd56f")

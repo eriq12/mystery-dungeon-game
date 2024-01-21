@@ -6,8 +6,6 @@ class_name Character
 
 var character_id : int
 
-var character_model : Mesh
-
 var character_render : Node3D
 
 #endregion
@@ -18,10 +16,6 @@ var orientation : TileMapLevel.Direction : get = _get_orientation, set = _set_or
 
 var has_queued_move : bool : get = _has_queued_move
 
-const walk_preset : CharacterMove = preload("res://resources/moves/preset_moves/movement/walk_direction_move.tres")
-
-const face_preset : CharacterMove = preload("res://resources/moves/preset_moves/movement/face_direction_move.tres")
-
 var brain : CharacterBrain : get = get_brain
 
 var _brain_cache : CharacterBrain
@@ -30,18 +24,29 @@ var is_player_character : bool : get = _is_player_character
 
 #endregion
 
-#region stamina
+#region character stats
 
-@export var stamina_maximum : float = 1
+@export var base_stats : CharacterBaseStats
+
+@export var stats : CharacterStats
+
+var alive : bool : get = _is_alive
+
+var stamina_maximum : float : get = get_maximum_stamina
 
 var stamina : float = 0
+
+signal on_death(character : Character)
 
 #endregion
 
 #region location data
 
-signal on_location_change(new_location : Vector3i)
-var location : Vector3i
+signal on_location_change(new_location : Vector2i, view_range : int)
+
+var location : Vector2i
+
+var level_id : int
 
 #endregion
 
@@ -54,6 +59,10 @@ var view_range : int = 5
 func _ready() -> void:
 	character_render = get_child(0)
 	_update_brain()
+	if not base_stats:
+		base_stats = load("res://resources/character_base_stat_data/adventurer.tres") as CharacterBaseStats
+	if not stats:
+		stats = CharacterStats.new(base_stats)
 
 func _update_brain() -> void:
 	for node in get_children():
@@ -64,9 +73,21 @@ func _update_brain() -> void:
 func _is_player_character() -> bool:
 	return brain as PlayerBrain != null
 
-func set_grid_location(new_location : Vector3i) -> void:
+#region health handling
+
+func damage(damage_value : int) -> int:
+	return stats.deplete_health_by(damage_value)
+
+#endregion
+
+#region location and orientation handling
+
+func set_grid_location(new_location : Vector2i) -> void:
 	location = new_location
 	on_location_change.emit(new_location, view_range)
+
+func set_level_location(new_level_id : int) -> void:
+	level_id = new_level_id
 
 func visual_look_at(relative_direction : Vector3) -> void:
 	if not character_render:
@@ -84,6 +105,8 @@ func _set_orientation(new_direction : TileMapLevel.Direction) -> void:
 		_brain_cache.orientation = new_direction
 	orientation = new_direction
 
+#endregion
+
 #region move queue handling
 
 func get_brain() -> CharacterBrain:
@@ -100,4 +123,16 @@ func _has_queued_move() -> bool:
 func dequeue_direction() -> TileMapLevel.Direction:
 	return _brain_cache.dequeue_direction() if _brain_cache else TileMapLevel.Direction.NONE
 
+#endregion
+
+#region stats getters
+
+func get_maximum_stamina() -> float:
+	return stats.stamina
+
+func _is_alive() -> bool:
+	return stats and stats.is_alive
+
+func _to_string() -> String:
+	return stats._to_string()
 #endregion

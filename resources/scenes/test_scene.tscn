@@ -1,12 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://b0wf6nktfgfxh"]
+[gd_scene load_steps=5 format=3 uid="uid://b0wf6nktfgfxh"]
 
 [ext_resource type="Script" path="res://scripts/scenes/test_scene.gd" id="1_hp1c3"]
+[ext_resource type="PackedScene" uid="uid://bfkau3jdnily1" path="res://resources/prefabs/training_dummy.tscn" id="2_5lyv0"]
 [ext_resource type="PackedScene" uid="uid://cfokocrhggagl" path="res://resources/prefabs/player.tscn" id="2_w8igd"]
 [ext_resource type="PackedScene" uid="uid://bvgo3btpijh74" path="res://resources/prefabs/dungeon.tscn" id="3_m04em"]
 
 [node name="Node3D" type="Node3D" node_paths=PackedStringArray("dungeon_node")]
 script = ExtResource("1_hp1c3")
 dungeon_node = NodePath("Dungeon")
+training_dummy = ExtResource("2_5lyv0")
+dummy_spawn_location = Vector2i(0, 1)
 player_scene = ExtResource("2_w8igd")
 
 [node name="Dungeon" parent="." instance=ExtResource("3_m04em")]
+default_entrance_level_index = 0
+default_entrance_entry_point_index = 0

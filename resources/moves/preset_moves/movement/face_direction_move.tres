@@ -1,10 +1,19 @@
-[gd_resource type="Resource" script_class="CharacterMove" load_steps=3 format=3 uid="uid://ck34f8w7gveh1"]
+[gd_resource type="Resource" script_class="CharacterMove" load_steps=6 format=3 uid="uid://cdl7lnucp6cdl"]
 
-[ext_resource type="Resource" uid="uid://sq1pqp11ncv2" path="res://resources/moves/preset_effects/movement/face_direction.tres" id="1_3qu6l"]
-[ext_resource type="Script" path="res://scripts/character/action/move/character_move.gd" id="1_kooku"]
+[ext_resource type="Script" path="res://scripts/character/move/character_move.gd" id="1_ci3gr"]
+[ext_resource type="Script" path="res://scripts/character/move/effect_variants/move_effect_wildcard.gd" id="1_digxe"]
+[ext_resource type="Script" path="res://scripts/character/move/move_action.gd" id="2_et1bd"]
+
+[sub_resource type="Resource" id="Resource_dstab"]
+script = ExtResource("1_digxe")
+_effect = 1
+
+[sub_resource type="Resource" id="Resource_8fl80"]
+script = ExtResource("2_et1bd")
+move_effect = SubResource("Resource_dstab")
 
 [resource]
-script = ExtResource("1_kooku")
-target_characters = true
-effects = Array[Resource("res://scripts/character/action/move/move_effect.gd")]([ExtResource("1_3qu6l")])
+script = ExtResource("1_ci3gr")
+target_characters = false
+actions = Array[ExtResource("2_et1bd")]([SubResource("Resource_8fl80")])
 stamina_cost = 0.1

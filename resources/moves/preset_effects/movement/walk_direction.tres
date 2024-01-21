@@ -1,11 +1,7 @@
-[gd_resource type="Resource" script_class="Move_Effect_Movement" load_steps=2 format=3 uid="uid://6otubvnnfsht"]
+[gd_resource type="Resource" script_class="MoveEffectWildcard" load_steps=2 format=3 uid="uid://dyhdcm0djkkol"]
 
-[ext_resource type="Script" path="res://scripts/character/action/move/effect_variants/move_effect_movement.gd" id="1_loxuq"]
+[ext_resource type="Script" path="res://scripts/character/move/effect_variants/move_effect_wildcard.gd" id="1_m28tm"]
 
 [resource]
-script = ExtResource("1_loxuq")
-movement_targeting = 0
-tiles_moved = 1
-pierce_occupied = false
-targeting = 0
-type_effect = 0
+script = ExtResource("1_m28tm")
+_effect = 0
