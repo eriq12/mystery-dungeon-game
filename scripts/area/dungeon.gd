@@ -52,6 +52,7 @@ func spawn_entity(entity : PackedScene, level_id : int, location: Vector2i) -> v
 
 func _move_character(character : Character, location_offset : Vector2i, level : int = -1) -> bool:
 	var location : Vector2i = character.location + location_offset
+	character.play_walk_animation()
 	return _set_character_location(character, location, level)
 
 func _set_character_location(character : Character, location : Vector2i, level : int = -1) -> bool:
@@ -86,6 +87,7 @@ func _orient_character(character : Character, direction : TileMapLevel.Direction
 		TileMapLevel.Direction.WEST:
 			character.visual_look_at(Vector3.LEFT)
 			character.orientation = TileMapLevel.Direction.WEST
+	character.play_walk_animation()
 
 func _apply_effect_linearly(character : Character, effect : MoveEffect, direction : TileMapLevel.Direction, reach : int) -> void:
 	var direction_vector : Vector2i = TileMapLevel.preset_direction[direction]
@@ -100,7 +102,7 @@ func _apply_effect_on(caster : Character, target : Character, effect : MoveEffec
 		MoveEffect.Type_Effect.HEALTH_EFFECT:
 			var damage_effect : MoveEffectDamage = effect as MoveEffectDamage
 			if damage_effect:
-				print("%s attacked %s!" % [caster, target])
+				caster.play_attack_animation()
 				var damage_received : int = target.damage(damage_effect.damage_value + caster.stats.attack)
 				print("%s received %d damage!" % [target, damage_received])
 		
