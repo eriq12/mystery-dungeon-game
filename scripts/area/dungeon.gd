@@ -53,7 +53,16 @@ func spawn_entity(entity : PackedScene, level_id : int, location: Vector2i) -> v
 func _move_character(character : Character, location_offset : Vector2i, level : int = -1) -> bool:
 	var location : Vector2i = character.location + location_offset
 	character.play_walk_animation()
-	return _set_character_location(character, location, level)
+	return _walk_character(character, location)
+
+func _walk_character(character : Character, location : Vector2i) -> bool:
+	var level : TileMapLevel = levels[dungeon_entities.associated_floor_level.get(character, -1)]
+	if not (level and level.update_character_location(character, location)):
+		return false
+	character.set_grid_location(location)
+	character.set_target_slide(dungeon_entities.to_local(level.get_global_tile_position(location)))
+	return true
+	
 
 func _set_character_location(character : Character, location : Vector2i, level : int = -1) -> bool:
 	var old_level : int = dungeon_entities.associated_floor_level[character] if dungeon_entities.associated_floor_level.has(character) else -1
@@ -69,7 +78,9 @@ func _set_character_location(character : Character, location : Vector2i, level :
 				levels[old_level].remove_character(character)
 			levels[level].enter_character(character, location)
 			dungeon_entities.associated_floor_level[character] = level
-		character.transform.origin = dungeon_entities.to_local(levels[level].get_global_tile_position(location))
+		var new_location : Vector3 = dungeon_entities.to_local(levels[level].get_global_tile_position(location))
+		character.transform.origin = new_location
+		character.set_target_slide(new_location)
 		return true
 	return false
 
@@ -87,7 +98,7 @@ func _orient_character(character : Character, direction : TileMapLevel.Direction
 		TileMapLevel.Direction.WEST:
 			character.visual_look_at(Vector3.LEFT)
 			character.orientation = TileMapLevel.Direction.WEST
-	character.play_walk_animation()
+	character.play_turn_animation()
 
 func _apply_effect_linearly(character : Character, effect : MoveEffect, direction : TileMapLevel.Direction, reach : int) -> void:
 	var direction_vector : Vector2i = TileMapLevel.preset_direction[direction]

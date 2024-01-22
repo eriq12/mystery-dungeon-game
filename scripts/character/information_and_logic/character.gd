@@ -12,6 +12,10 @@ var character_render : Node3D
 
 var animation_state_machine : AnimationNodeStateMachinePlayback
 
+var _target_slide_location : Vector3
+
+const _slide_speed : float = 1.0
+
 #endregion
 
 #region action/move data
@@ -72,6 +76,13 @@ func _ready() -> void:
 		animation_state_machine = animation_tree.get("parameters/playback")
 		animation_state_machine.travel(&"Idle")
 
+func _process(delta) -> void:
+	if(transform.origin == _target_slide_location):
+		set_process(false)
+		return
+	var direction_vector : Vector3 = transform.origin.direction_to(_target_slide_location)
+	transform.origin += direction_vector * delta * _slide_speed
+
 func _update_brain() -> void:
 	for node in get_children():
 		_brain_cache = node as CharacterBrain
@@ -112,6 +123,10 @@ func _set_orientation(new_direction : TileMapLevel.Direction) -> void:
 	if _brain_cache:
 		_brain_cache.orientation = new_direction
 	orientation = new_direction
+
+func set_target_slide(location : Vector3):
+	_target_slide_location = location
+	set_process(true)
 
 #endregion
 
@@ -158,11 +173,15 @@ func _to_string() -> String:
 
 func play_walk_animation() -> void:
 	if animation_state_machine:
-		animation_state_machine.travel(&"Walking_B")
+		animation_state_machine.travel(&"Walk")
 
 func play_attack_animation() -> void:
 	if animation_state_machine:
-		animation_state_machine.travel(&"1H_Melee_Attack_Chop")
+		animation_state_machine.travel(&"Attack")
+
+func play_turn_animation() -> void:
+	if animation_state_machine:
+		animation_state_machine.travel(&"Turn")
 
 func _on_animation_start(_anim_name : StringName) -> void:
 	pass
