@@ -13,5 +13,3 @@ dummy_spawn_location = Vector2i(0, 1)
 player_scene = ExtResource("2_w8igd")
 
 [node name="Dungeon" parent="." instance=ExtResource("3_m04em")]
-default_entrance_level_index = 0
-default_entrance_entry_point_index = 0

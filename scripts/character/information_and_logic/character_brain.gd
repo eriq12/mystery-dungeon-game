@@ -17,6 +17,7 @@ func _has_queued_move() -> bool:
 
 func set_queued_move(new_move : CharacterMove) -> void:
 	_queued_move = new_move
+	self.set_process(false)
 
 func dequeue_move() -> CharacterMove:
 	var result : CharacterMove = _queued_move

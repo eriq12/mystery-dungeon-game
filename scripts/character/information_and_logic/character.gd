@@ -8,6 +8,14 @@ var character_id : int
 
 var character_render : Node3D
 
+@onready var on_animation_finish_callable : Callable = Callable(self, "_on_animation_finished")
+
+var animation_state_machine : AnimationNodeStateMachinePlayback
+
+var _target_slide_location : Vector3
+
+const _slide_speed : float = 1.0
+
 #endregion
 
 #region action/move data
@@ -36,8 +44,6 @@ var stamina_maximum : float : get = get_maximum_stamina
 
 var stamina : float = 0
 
-signal on_death(character : Character)
-
 #endregion
 
 #region location data
@@ -63,6 +69,19 @@ func _ready() -> void:
 		base_stats = load("res://resources/character_base_stat_data/adventurer.tres") as CharacterBaseStats
 	if not stats:
 		stats = CharacterStats.new(base_stats)
+	var animation_tree : AnimationTree = find_child("AnimationTree")
+	if animation_tree:
+		if not animation_tree.animation_finished.is_connected(on_animation_finish_callable):
+			animation_tree.animation_finished.connect(on_animation_finish_callable)
+		animation_state_machine = animation_tree.get("parameters/playback")
+		animation_state_machine.travel(&"Idle")
+
+func _process(delta) -> void:
+	if(transform.origin == _target_slide_location):
+		set_process(false)
+		return
+	var direction_vector : Vector3 = transform.origin.direction_to(_target_slide_location)
+	transform.origin += direction_vector * delta * _slide_speed
 
 func _update_brain() -> void:
 	for node in get_children():
@@ -105,6 +124,10 @@ func _set_orientation(new_direction : TileMapLevel.Direction) -> void:
 		_brain_cache.orientation = new_direction
 	orientation = new_direction
 
+func set_target_slide(location : Vector3):
+	_target_slide_location = location
+	set_process(true)
+
 #endregion
 
 #region move queue handling
@@ -123,6 +146,15 @@ func _has_queued_move() -> bool:
 func dequeue_direction() -> TileMapLevel.Direction:
 	return _brain_cache.dequeue_direction() if _brain_cache else TileMapLevel.Direction.NONE
 
+func continue_brain_processing() -> void:
+	if _brain_cache:
+		_brain_cache.set_process(true)
+
+func reset_move_queue() -> void:
+	if _brain_cache:
+		_brain_cache.set_queued_move(null)
+		_brain_cache.set_queued_direction()
+
 #endregion
 
 #region stats getters
@@ -135,4 +167,27 @@ func _is_alive() -> bool:
 
 func _to_string() -> String:
 	return stats._to_string()
+#endregion
+
+#region animation processing
+
+func play_walk_animation() -> void:
+	if animation_state_machine:
+		animation_state_machine.travel(&"Walk")
+
+func play_attack_animation() -> void:
+	if animation_state_machine:
+		animation_state_machine.travel(&"Attack")
+
+func play_turn_animation() -> void:
+	if animation_state_machine:
+		animation_state_machine.travel(&"Turn")
+
+func _on_animation_start(_anim_name : StringName) -> void:
+	pass
+
+func _on_animation_finished(_anim_name : StringName) -> void:
+	reset_move_queue()
+	continue_brain_processing()
+
 #endregion
